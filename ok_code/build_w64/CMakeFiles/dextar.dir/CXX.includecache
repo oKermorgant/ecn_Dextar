@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/chain.h
+indiv.h
+-
+vector
+-
+
+../include/indiv.h
+string
+-
+vector
+-
+iostream
+-
+
+E:/code/ecn_Dextar/ok_code/src/chain.cpp
+chain.h
+-
+algorithm
+-
+iostream
+-
+ctime
+-
+string
+-
+

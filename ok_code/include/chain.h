@@ -1,7 +1,7 @@
 #ifndef CHAIN_H
 #define CHAIN_H
 
-#include <ok_galg/indiv.h>
+#include <indiv.h>
 #include <vector>
 
 class Chain : public ok_galg::Indiv
