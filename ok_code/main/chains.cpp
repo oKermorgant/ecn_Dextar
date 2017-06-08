@@ -5,7 +5,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include <chain.h>
-#include <ok_galg/galg.h>
+#include <galg.h>
 #include <find_chains.h>
 
 using namespace std;
@@ -26,7 +26,7 @@ void on_trackbar( int, void* ) {}
 int main(void)
 {
     // load  image to gray
-    Mat im1, img, im_th, im = imread("../face.pbm");
+    Mat im1, img, im_th, im = imread("face.pbm");
     cv::cvtColor(im, img, cv::COLOR_BGR2GRAY);
 
     // first contour detection
@@ -141,7 +141,7 @@ int main(void)
     }
 
     Chain best(nodes);
-    ok_galg::SolveMultiThread(best, YAML::Node(), 50, 2, false);
+    ok_galg::SolveMultiThread(best, 50, 2, false);
 
     Chain random;
     random.Randomize();
