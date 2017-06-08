@@ -55,17 +55,6 @@ CMAKE_BINARY_DIR = E:\code\ecn_Dextar\ok_code\build_w64
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	"C:\Program Files\CMake\bin\cmake.exe" -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
@@ -76,6 +65,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	"C:\Program Files\CMake\bin\cmake.exe" -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -108,19 +108,6 @@ preinstall/fast:
 depend:
 	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles\Makefile.cmake 1
 .PHONY : depend
-
-#=============================================================================
-# Target rules for targets named dextar
-
-# Build rule for target.
-dextar: cmake_check_build_system
-	$(MAKE) -f CMakeFiles\Makefile2 dextar
-.PHONY : dextar
-
-# fast build rule for target.
-dextar/fast:
-	$(MAKE) -f CMakeFiles\dextar.dir\build.make CMakeFiles/dextar.dir/build
-.PHONY : dextar/fast
 
 #=============================================================================
 # Target rules for targets named chains
@@ -168,7 +155,7 @@ src/chain.obj: src/chain.cpp.obj
 
 # target to build an object file
 src/chain.cpp.obj:
-	$(MAKE) -f CMakeFiles\dextar.dir\build.make CMakeFiles/dextar.dir/src/chain.cpp.obj
+	$(MAKE) -f CMakeFiles\chains.dir\build.make CMakeFiles/chains.dir/src/chain.cpp.obj
 .PHONY : src/chain.cpp.obj
 
 src/chain.i: src/chain.cpp.i
@@ -177,7 +164,7 @@ src/chain.i: src/chain.cpp.i
 
 # target to preprocess a source file
 src/chain.cpp.i:
-	$(MAKE) -f CMakeFiles\dextar.dir\build.make CMakeFiles/dextar.dir/src/chain.cpp.i
+	$(MAKE) -f CMakeFiles\chains.dir\build.make CMakeFiles/chains.dir/src/chain.cpp.i
 .PHONY : src/chain.cpp.i
 
 src/chain.s: src/chain.cpp.s
@@ -186,7 +173,7 @@ src/chain.s: src/chain.cpp.s
 
 # target to generate assembly for a file
 src/chain.cpp.s:
-	$(MAKE) -f CMakeFiles\dextar.dir\build.make CMakeFiles/dextar.dir/src/chain.cpp.s
+	$(MAKE) -f CMakeFiles\chains.dir\build.make CMakeFiles/chains.dir/src/chain.cpp.s
 .PHONY : src/chain.cpp.s
 
 # Help Target
@@ -195,10 +182,9 @@ help:
 	@echo ... all (the default if no target is provided)
 	@echo ... clean
 	@echo ... depend
-	@echo ... rebuild_cache
-	@echo ... dextar
 	@echo ... chains
 	@echo ... edit_cache
+	@echo ... rebuild_cache
 	@echo ... main/chains.obj
 	@echo ... main/chains.i
 	@echo ... main/chains.s

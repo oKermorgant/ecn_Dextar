@@ -44,6 +44,18 @@ vector
 iostream
 -
 
+../include/parser.h
+fstream
+-
+sstream
+-
+iostream
+-
+vector
+-
+string
+-
+
 C:/OpenCV/opencv/build/include/opencv/cxcore.h
 opencv2/core/core_c.h
 C:/OpenCV/opencv/build/include/opencv/opencv2/core/core_c.h
@@ -1000,5 +1012,19 @@ chain.h
 galg.h
 -
 find_chains.h
+-
+parser.h
+-
+
+E:/code/ecn_Dextar/ok_code/src/chain.cpp
+chain.h
+-
+algorithm
+-
+iostream
+-
+ctime
+-
+string
 -
 

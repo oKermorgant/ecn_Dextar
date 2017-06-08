@@ -5,6 +5,7 @@ CMakeFiles/chains.dir/main/chains.cpp.obj: ../include/chain.h
 CMakeFiles/chains.dir/main/chains.cpp.obj: ../include/find_chains.h
 CMakeFiles/chains.dir/main/chains.cpp.obj: ../include/galg.h
 CMakeFiles/chains.dir/main/chains.cpp.obj: ../include/indiv.h
+CMakeFiles/chains.dir/main/chains.cpp.obj: ../include/parser.h
 CMakeFiles/chains.dir/main/chains.cpp.obj: C:/OpenCV/opencv/build/include/opencv/cxcore.h
 CMakeFiles/chains.dir/main/chains.cpp.obj: C:/OpenCV/opencv/build/include/opencv2/core.hpp
 CMakeFiles/chains.dir/main/chains.cpp.obj: C:/OpenCV/opencv/build/include/opencv2/core/base.hpp
@@ -95,4 +96,8 @@ CMakeFiles/chains.dir/main/chains.cpp.obj: C:/OpenCV/opencv/build/include/opencv
 CMakeFiles/chains.dir/main/chains.cpp.obj: C:/OpenCV/opencv/build/include/opencv2/videoio.hpp
 CMakeFiles/chains.dir/main/chains.cpp.obj: C:/OpenCV/opencv/build/include/opencv2/videoio/videoio_c.h
 CMakeFiles/chains.dir/main/chains.cpp.obj: ../main/chains.cpp
+
+CMakeFiles/chains.dir/src/chain.cpp.obj: ../include/chain.h
+CMakeFiles/chains.dir/src/chain.cpp.obj: ../include/indiv.h
+CMakeFiles/chains.dir/src/chain.cpp.obj: ../src/chain.cpp
 

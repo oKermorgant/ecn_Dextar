@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/chains.dir/main/chains.cpp.obj"
+  "CMakeFiles/chains.dir/src/chain.cpp.obj"
   "chains.pdb"
   "chains.exe"
   "chains.exe.manifest"

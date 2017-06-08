@@ -6,6 +6,7 @@ CMakeFiles/chains.dir/main/chains.cpp.obj
  ../include/find_chains.h
  ../include/galg.h
  ../include/indiv.h
+ ../include/parser.h
  C:/OpenCV/opencv/build/include/opencv/cxcore.h
  C:/OpenCV/opencv/build/include/opencv2/core.hpp
  C:/OpenCV/opencv/build/include/opencv2/core/base.hpp
@@ -96,3 +97,7 @@ CMakeFiles/chains.dir/main/chains.cpp.obj
  C:/OpenCV/opencv/build/include/opencv2/videoio.hpp
  C:/OpenCV/opencv/build/include/opencv2/videoio/videoio_c.h
  E:/code/ecn_Dextar/ok_code/main/chains.cpp
+CMakeFiles/chains.dir/src/chain.cpp.obj
+ ../include/chain.h
+ ../include/indiv.h
+ E:/code/ecn_Dextar/ok_code/src/chain.cpp

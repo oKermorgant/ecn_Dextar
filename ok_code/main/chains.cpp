@@ -7,6 +7,7 @@
 #include <chain.h>
 #include <galg.h>
 #include <find_chains.h>
+#include <parser.h>
 
 using namespace std;
 using namespace cv;
@@ -25,8 +26,15 @@ void on_trackbar( int, void* ) {}
 
 int main(void)
 {
+    // load config
+    Parser dextar_config("dextar_config.txt");
+
+    int vid = dextar_config.Get("video");
+    cout << "using video source " << vid << endl;
+
     // load  image to gray
-    Mat im1, img, im_th, im = imread("face.pbm");
+    Mat im1, img, im_th, im = imread("../face.pbm");
+
     cv::cvtColor(im, img, cv::COLOR_BGR2GRAY);
 
     // first contour detection
@@ -34,9 +42,9 @@ int main(void)
     vector<Vec4i> hierarchy;
 
     // live?
-    if(false)
+    if(vid != -1)
     {
-        cv::VideoCapture cap(0);
+        cv::VideoCapture cap(vid);
         cv::namedWindow("Live");
         int clic_evt = cv::EVENT_FLAG_ALTKEY;
         cv::setMouseCallback("Live", OnMouseSelect, (void*)&clic_evt);
