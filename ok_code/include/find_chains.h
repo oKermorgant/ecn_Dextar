@@ -65,9 +65,9 @@ void DrawChain(const vector<vector<Point> > &_contours, Chain &_chain, cv::Mat _
 unsigned int FindChains(vector<Point> &_contour, vector<Point> _seeds, vector<vector<Point> > &_chains)
 {
     // some parameters
-    const unsigned int min_length = 15;
+    const unsigned int min_length = 5;
     const unsigned int dot_size = 5;
-    const unsigned int max_dist = 10;
+    const unsigned int max_dist = 100;
     const unsigned int length = _chains.size();
 
     for(Point seed: _seeds) // loop by value is on purpose
@@ -186,7 +186,7 @@ void RefineContours(vector<vector<Point> > &_contours)
     bool stitch = true;
     vector<Point> start,end;
     vector<int> neighboors(4,0), neighboor_idx(4,0);
-    const int max_dist = 100;   // actually square of distance
+    const int max_dist = 120;   // actually square of pixel distance
     int stitch_count = 0;
 
 

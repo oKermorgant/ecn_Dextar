@@ -34,9 +34,9 @@ int main(void)
     vector<Vec4i> hierarchy;
 
     // live?
-    if(false)
+    if(true)
     {
-        cv::VideoCapture cap(0);
+        cv::VideoCapture cap(2);
         cv::namedWindow("Live");
         int clic_evt = cv::EVENT_FLAG_ALTKEY;
         cv::setMouseCallback("Live", OnMouseSelect, (void*)&clic_evt);
@@ -96,6 +96,7 @@ int main(void)
 
 
 
+    /*
     // draw chains iteratively
     for(unsigned int i=0;i<contours.size();++i)
     {
@@ -113,7 +114,7 @@ int main(void)
     }
 
     imshow("chains", im);
-    cv::waitKey(0);
+    cv::waitKey(0);*/
 
     // build nodes = distance from one chain ending to the next one
     std::vector<std::vector<double> > nodes(2*contours.size());
@@ -148,7 +149,7 @@ int main(void)
 
     cout << "random: " << random.cost << " vs GA: " << best.cost << "( 1/" << int((random.cost+0.1)/best.cost) << ")" << endl;
 
-    DrawChain(contours, best, im, "Best", 5, "../DrawFace.mp4");
+    DrawChain(contours, best, im, "Best", 5, "../DrawFace.avi");
     DrawChain(contours, random, im, "Random", 5);
 
     cv::waitKey(0);
