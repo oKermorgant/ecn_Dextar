@@ -2,7 +2,7 @@ The configFile is used by the C++ code for portrait drawing using Dextar robot
 Author: Alexandre Sarazin & Vamsi Krishna Guda, Date: June, 11 2017
 
 webcamParam 1		--Set the webcam input (default value = 0)
-liveParam -1		--Set to -1 to avoid the live stream (default value = 0)
+liveParam 0		--Set to -1 to avoid the live stream (default value = 0)
 ellipseHeight 160	--GUI default value for the ellipse height (default value = 160)
 ellipseWidth 120	--GUI default value for the ellipse width (default value = 120)
 kernel 10		--GUI default value for the kernel (default value = 10)

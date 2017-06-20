@@ -239,10 +239,10 @@ int main(void)
 
         cout << "random: " << random.cost << " vs GA: " << best.cost << "( 1/" << int((random.cost+0.1)/best.cost) << ")" << endl;
 
-        ostringstream vidoss;
+        /*ostringstream vidoss;
         vidoss << "../video/drawFace" << count << ".avi";
-        fileName = vidoss.str();
-        DrawChain(chains, best, im_draw, "Live", 5, fileName);
+        fileName = vidoss.str();*/
+        DrawChain(chains, best, im_draw, "Live", 5);
         //DrawChain(chains, random, im1, "Random", 5);
 
         GenerateFile(chains, best, count);
