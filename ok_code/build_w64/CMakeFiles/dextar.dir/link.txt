@@ -1,2 +1,0 @@
-C:\winBuilds\bin\ar.exe qc libdextar.a  CMakeFiles/dextar.dir/src/chain.cpp.obj
-C:\winBuilds\bin\ranlib.exe libdextar.a

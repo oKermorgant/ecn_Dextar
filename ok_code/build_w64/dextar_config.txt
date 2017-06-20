@@ -1,6 +1,0 @@
-# -1 for no video (example image)
-video 0
-
-arg 2.3
-
-save_vid 0
