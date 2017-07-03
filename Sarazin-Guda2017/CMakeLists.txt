@@ -16,8 +16,7 @@ find_package (Threads)
 
 include_directories(. include)
 
-add_executable(chains 
-include/chain.h src/chain.cpp   include/find_chains.h include/galg.h include/indiv.h include/configuration.h src/configuration.cpp
-    include/script_generator.h
+add_executable(DrawBOT
+include/chain.h src/chain.cpp   include/find_chains.h include/galg.h include/indiv.h include/script_generator.h include/parser.h
     main/chains.cpp)
-target_link_libraries(chains ${CMAKE_THREAD_LIBS_INIT} ${OpenCV_LIBS})
+target_link_libraries(DrawBOT ${CMAKE_THREAD_LIBS_INIT} ${OpenCV_LIBS})

@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/olivier/code/projects/Dextar/Sarazin-Guda2017
+CMAKE_SOURCE_DIR = /home/alexandre/Desktop/ecn_Dextar/Sarazin-Guda2017
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/olivier/code/projects/Dextar/Sarazin-Guda2017/build
+CMAKE_BINARY_DIR = /home/alexandre/Desktop/ecn_Dextar/Sarazin-Guda2017/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/olivier/code/projects/Dextar/Sarazin-Guda2017/build/CMakeFiles /home/olivier/code/projects/Dextar/Sarazin-Guda2017/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alexandre/Desktop/ecn_Dextar/Sarazin-Guda2017/build/CMakeFiles /home/alexandre/Desktop/ecn_Dextar/Sarazin-Guda2017/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/olivier/code/projects/Dextar/Sarazin-Guda2017/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alexandre/Desktop/ecn_Dextar/Sarazin-Guda2017/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named chains
+# Target rules for targets named DrawBOT
 
 # Build rule for target.
-chains: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 chains
-.PHONY : chains
+DrawBOT: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 DrawBOT
+.PHONY : DrawBOT
 
 # fast build rule for target.
-chains/fast:
-	$(MAKE) -f CMakeFiles/chains.dir/build.make CMakeFiles/chains.dir/build
-.PHONY : chains/fast
+DrawBOT/fast:
+	$(MAKE) -f CMakeFiles/DrawBOT.dir/build.make CMakeFiles/DrawBOT.dir/build
+.PHONY : DrawBOT/fast
 
 main/chains.o: main/chains.cpp.o
 
@@ -129,7 +129,7 @@ main/chains.o: main/chains.cpp.o
 
 # target to build an object file
 main/chains.cpp.o:
-	$(MAKE) -f CMakeFiles/chains.dir/build.make CMakeFiles/chains.dir/main/chains.cpp.o
+	$(MAKE) -f CMakeFiles/DrawBOT.dir/build.make CMakeFiles/DrawBOT.dir/main/chains.cpp.o
 .PHONY : main/chains.cpp.o
 
 main/chains.i: main/chains.cpp.i
@@ -138,7 +138,7 @@ main/chains.i: main/chains.cpp.i
 
 # target to preprocess a source file
 main/chains.cpp.i:
-	$(MAKE) -f CMakeFiles/chains.dir/build.make CMakeFiles/chains.dir/main/chains.cpp.i
+	$(MAKE) -f CMakeFiles/DrawBOT.dir/build.make CMakeFiles/DrawBOT.dir/main/chains.cpp.i
 .PHONY : main/chains.cpp.i
 
 main/chains.s: main/chains.cpp.s
@@ -147,7 +147,7 @@ main/chains.s: main/chains.cpp.s
 
 # target to generate assembly for a file
 main/chains.cpp.s:
-	$(MAKE) -f CMakeFiles/chains.dir/build.make CMakeFiles/chains.dir/main/chains.cpp.s
+	$(MAKE) -f CMakeFiles/DrawBOT.dir/build.make CMakeFiles/DrawBOT.dir/main/chains.cpp.s
 .PHONY : main/chains.cpp.s
 
 src/chain.o: src/chain.cpp.o
@@ -156,7 +156,7 @@ src/chain.o: src/chain.cpp.o
 
 # target to build an object file
 src/chain.cpp.o:
-	$(MAKE) -f CMakeFiles/chains.dir/build.make CMakeFiles/chains.dir/src/chain.cpp.o
+	$(MAKE) -f CMakeFiles/DrawBOT.dir/build.make CMakeFiles/DrawBOT.dir/src/chain.cpp.o
 .PHONY : src/chain.cpp.o
 
 src/chain.i: src/chain.cpp.i
@@ -165,7 +165,7 @@ src/chain.i: src/chain.cpp.i
 
 # target to preprocess a source file
 src/chain.cpp.i:
-	$(MAKE) -f CMakeFiles/chains.dir/build.make CMakeFiles/chains.dir/src/chain.cpp.i
+	$(MAKE) -f CMakeFiles/DrawBOT.dir/build.make CMakeFiles/DrawBOT.dir/src/chain.cpp.i
 .PHONY : src/chain.cpp.i
 
 src/chain.s: src/chain.cpp.s
@@ -174,35 +174,8 @@ src/chain.s: src/chain.cpp.s
 
 # target to generate assembly for a file
 src/chain.cpp.s:
-	$(MAKE) -f CMakeFiles/chains.dir/build.make CMakeFiles/chains.dir/src/chain.cpp.s
+	$(MAKE) -f CMakeFiles/DrawBOT.dir/build.make CMakeFiles/DrawBOT.dir/src/chain.cpp.s
 .PHONY : src/chain.cpp.s
-
-src/configuration.o: src/configuration.cpp.o
-
-.PHONY : src/configuration.o
-
-# target to build an object file
-src/configuration.cpp.o:
-	$(MAKE) -f CMakeFiles/chains.dir/build.make CMakeFiles/chains.dir/src/configuration.cpp.o
-.PHONY : src/configuration.cpp.o
-
-src/configuration.i: src/configuration.cpp.i
-
-.PHONY : src/configuration.i
-
-# target to preprocess a source file
-src/configuration.cpp.i:
-	$(MAKE) -f CMakeFiles/chains.dir/build.make CMakeFiles/chains.dir/src/configuration.cpp.i
-.PHONY : src/configuration.cpp.i
-
-src/configuration.s: src/configuration.cpp.s
-
-.PHONY : src/configuration.s
-
-# target to generate assembly for a file
-src/configuration.cpp.s:
-	$(MAKE) -f CMakeFiles/chains.dir/build.make CMakeFiles/chains.dir/src/configuration.cpp.s
-.PHONY : src/configuration.cpp.s
 
 # Help Target
 help:
@@ -212,16 +185,13 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... chains"
+	@echo "... DrawBOT"
 	@echo "... main/chains.o"
 	@echo "... main/chains.i"
 	@echo "... main/chains.s"
 	@echo "... src/chain.o"
 	@echo "... src/chain.i"
 	@echo "... src/chain.s"
-	@echo "... src/configuration.o"
-	@echo "... src/configuration.i"
-	@echo "... src/configuration.s"
 .PHONY : help
 
 

@@ -1,4 +1,4 @@
-# Install script for directory: /home/olivier/code/projects/Dextar/Sarazin-Guda2017
+# Install script for directory: /home/alexandre/Desktop/ecn_Dextar/Sarazin-Guda2017
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/olivier/code/projects/Dextar/Sarazin-Guda2017/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/alexandre/Desktop/ecn_Dextar/Sarazin-Guda2017/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

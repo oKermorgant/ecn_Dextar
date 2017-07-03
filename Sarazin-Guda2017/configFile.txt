@@ -1,12 +1,15 @@
-The configFile is used by the C++ code for portrait drawing using Dextar robot
-Author: Alexandre Sarazin & Vamsi Krishna Guda, Date: June, 11 2017
-
-webcamParam 1		--Set the webcam input (default value = 0)
-liveParam 0		--Set to -1 to avoid the live stream (default value = 0)
-ellipseHeight 160	--GUI default value for the ellipse height (default value = 160)
-ellipseWidth 120	--GUI default value for the ellipse width (default value = 120)
-kernel 10		--GUI default value for the kernel (default value = 10)
-sigma 1			--GUI default value for the sigma (default value = 1)
-canny1 110		--GUI default value for the canny1 (default value = 110)
-canny2 75		--GUI default value for the canny2 (default value = 75)
+##The configFile is used by the C++ code for portrait drawing using Dextar robot
+##Author: Alexandre Sarazin & Vamsi Krishna Guda, Date: June, 11 2017
+#
+webcamParam 0		--Set the webcam input
+pixelated 0		--Set to -1 to add a pixelated effect to the sketch
+progMode 0		--Set to -1 to enter the programming mode and avoid live stream
+drawChains 0		--Set to -1 to display the detected chains (require the progMode)
+videoRecord 0		--Set to -1 to display/record the video of drawChains (require the progMode)
+#
+ellipseHeight 160	--GUI default value for the ellipse height
+ellipseWidth 120	--GUI default value for the ellipse width
+blur 5			--GUI default value for the blur
+lower 20		--GUI default value for the lower threshold
+upper 50		--GUI default value for the upper threshold
 
