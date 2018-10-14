@@ -10,6 +10,8 @@
 *.so
 *.pyc
 build-debug/
+build/
+build_w/
 devel/
 bin/
 install/

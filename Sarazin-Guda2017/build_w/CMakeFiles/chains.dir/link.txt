@@ -1,3 +1,0 @@
-C:\devel\cmake\bin\cmake.exe -E remove -f CMakeFiles\chains.dir/objects.a
-C:\devel\mingw\bin\ar.exe cr CMakeFiles\chains.dir/objects.a @CMakeFiles\chains.dir\objects1.rsp
-C:\devel\mingw\bin\g++.exe  -static   -Wl,--whole-archive CMakeFiles\chains.dir/objects.a -Wl,--no-whole-archive  -o chains.exe -Wl,--out-implib,libchains.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\chains.dir\linklibs.rsp
