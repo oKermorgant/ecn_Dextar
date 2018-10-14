@@ -6,52 +6,70 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 
 // A basic file parser for this application
 struct Parser
 {
-    Parser(std::string filename)
+  Parser(std::string filename)
+  {
+    std::ifstream config(filename,std::ios::in);
+    if(!config.is_open())
+      config.open("../" + filename, std::ios::in);
+
+    if(config.is_open())
     {
-        std::ifstream config(filename,std::ios::in);
-        if(!config.is_open())
-            config.open("../" + filename, std::ios::in);
+      std::string key,line;
 
-        if(config.is_open())
+      float val;
+
+      while(std::getline(config, line))
+      {
+        if((line.compare(0,1,"#") != 0) && (line.size() > 2))
         {
-
-            std::string key,line;
-
-            float val;
-
-            while(std::getline(config, line))
-            {
-                if((line.compare(0,1,"#") != 0) && (line.size() > 2))
-                {
-                    std::stringstream ss;
-                    ss << line;
-                    ss >> key;
-                    ss >> val;
-
-                    keys.push_back(key);
-                    values.push_back(val);
-                }
-            }
+          std::stringstream ss;
+          ss << line;
+          ss >> key;
+          ss >> val;
+          dict[key] = val;
         }
+      }
     }
+  }
 
-    float Get(std::string key)
+  template <class T>
+  void read(const std::string &key, T& value)
+  {
+    for(const auto &elem: dict)
     {
-        for(int i=0;i<keys.size();++i)
-        {
-            if(keys[i] == key)
-                return values[i];
-        }
-        return 0;
+      if(elem.first == key)
+      {
+        value = static_cast<T>(elem.second);
+        break;
+      }
     }
+  }
+  std::map<std::string, float> dict;
+};
 
-    std::vector<std::string> keys;
-    std::vector<float> values;
-
+struct Config
+{
+  Config(std::string filename)
+  {
+    Parser dextar_config(filename);
+    dextar_config.read("webcamParam", vid);
+    dextar_config.read("progMode", mode);
+    dextar_config.read("drawChains", draw);
+    dextar_config.read("videoRecord", vidRec);
+    dextar_config.read("pixelated", pixel);
+    dextar_config.read("ellipseHeight", ellipse_height);
+    dextar_config.read("ellipseWidth", ellipse_width);
+    dextar_config.read("blur", k);
+    dextar_config.read("lower", lower);
+    dextar_config.read("upper", upper);
+  }
+  int vid, mode, draw, vidRec, pixel, ellipse_height, ellipse_width, k;
+  int lower, upper;
 };
 
 #endif // PARSER

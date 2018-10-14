@@ -8,9 +8,12 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <vector>
+#include <opencv2/opencv.hpp>
+#include <chain.h>
 
 using namespace std;
-
+using cv::Point;
 void GenerateFile(const vector<vector<Point> > &_contours, Chain &_chain, int &rows, int &cols, int &_num, int &_pixel)
 {
     ostringstream oss;

@@ -5,7 +5,6 @@
 #include <string>
 
 using namespace std;
-using namespace ok_galg;
 
 // static variables
 std::vector<std::vector<double> > Chain::nodes_ = std::vector<std::vector<double> >();
@@ -14,7 +13,7 @@ std::vector<unsigned int> Chain::base_ordering_ = std::vector<unsigned int>();
 std::vector<unsigned int> Chain::base_dir_ = std::vector<unsigned int>();
 
 // constructor with static init
-Chain::Chain(std::vector<std::vector<double> > _nodes)
+Chain::Chain(const std::vector<std::vector<double> > &_nodes)
 {
     std::srand(std::time(0));
     nodes_ = _nodes;

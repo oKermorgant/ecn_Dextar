@@ -17,7 +17,6 @@
 
 using namespace std;
 using namespace cv;
-using namespace ok_galg;
 
 void OnMouseSelect(int evt, int x, int y, int flags, void* click) {
   if(evt == cv::EVENT_LBUTTONDBLCLK)
@@ -32,24 +31,15 @@ void on_trackbar( int, void* ) {}
 int main(void)
 {
   // load configuration from the configFile
-  Parser dextar_config("configFile.txt");
-  int vid = dextar_config.Get("webcamParam");
-  int mode = dextar_config.Get("progMode");
-  int draw = dextar_config.Get("drawChains");
-  int vidRec = dextar_config.Get("videoRecord");
-  int pixel = dextar_config.Get("pixelated");
-  int ellipse_height = dextar_config.Get("ellipseHeight");
-  int ellipse_width = dextar_config.Get("ellipseWidth");
-  int k = dextar_config.Get("blur");
-  int lower = dextar_config.Get("lower");
-  int upper = dextar_config.Get("upper");
-  cout << "using video source " << vid << endl;
-  cout << "programming mode " << mode << endl;
-  cout << "draw chains " << draw << endl;
-  cout << "video and record " << vidRec << endl;
-  cout << "pixelated effect " << pixel << endl;
+  Config config("config/configFile.txt");
 
-  Mat img, im_th, face, im, im1, im_r, img_matches;
+  cout << "using video source " << config.vid << endl;
+  cout << "programming mode " << config.mode << endl;
+  cout << "draw chains " << config.draw << endl;
+  cout << "video and record " << config.vidRec << endl;
+  cout << "pixelated effect " << config.pixel << endl;
+
+  Mat img, im_th, face_im, im, im1, im_r, img_matches;
   Rect face_i;
 
   int count = 0;
@@ -70,9 +60,9 @@ int main(void)
 
   while(true){
     // normal mode
-    if( mode != -1)
+    if( config.mode != -1)
     {
-      cv::VideoCapture cap(vid);
+      cv::VideoCapture cap(config.vid);
       int clic_evt = cv::EVENT_FLAG_ALTKEY;
       cv::setMouseCallback(appName, OnMouseSelect, (void*)&clic_evt);
 
@@ -81,11 +71,11 @@ int main(void)
       Rect roi(int(cols/4.), 0, int(cols/2.), rows);
 
       // Track-bar for dynamic parameters
-      createTrackbar( "Height", appName, &ellipse_height, 300, on_trackbar );
-      createTrackbar( "Width", appName, &ellipse_width, 300, on_trackbar );
-      createTrackbar( "Blur", appName, &k, 10, on_trackbar );
-      createTrackbar( "Lower threshold", appName, &lower, 255, on_trackbar );
-      createTrackbar( "Upper threshold", appName, &upper, 255, on_trackbar );
+      createTrackbar( "Height", appName, &config.ellipse_height, 300, on_trackbar );
+      createTrackbar( "Width", appName, &config.ellipse_width, 300, on_trackbar );
+      createTrackbar( "Blur", appName, &config.k, 10, on_trackbar );
+      createTrackbar( "Lower threshold", appName, &config.lower, 255, on_trackbar );
+      createTrackbar( "Upper threshold", appName, &config.upper, 255, on_trackbar );
 
       while(cap.isOpened() && clic_evt == cv::EVENT_FLAG_ALTKEY)
       {
@@ -99,7 +89,7 @@ int main(void)
           //Auto-face detection using haar cascade - Not smooth neither robust, to avoid
           if(true){
             CascadeClassifier face_detector, eye_detector;
-            face_detector.load("../main/haarcascade_frontalface_default.xml");
+            face_detector.load("../config/haarcascade_frontalface_default.xml");
             vector< Rect_<int> > faces;
             face_detector.detectMultiScale(im_th, faces);
             auto face = *(std::max_element(faces.begin(), faces.end(), [](const Rect_<int> &f1, const Rect_<int> &f2)
@@ -107,22 +97,23 @@ int main(void)
             rectangle(im_th, face, CV_RGB(0, 255,0), 2);
             Mat faceAlg = im_th(face);// Crop the face from the image
             cv::imshow("Face", faceAlg);
-          }
-          im_th.copyTo(face);
+          im_th.copyTo(face_im);
 
-        } else {
+        }
+          else
+          {
           //ellipse's parameters
           center.x = cols/2;
           center.y = rows/2;
-          size.height = std::max(1, ellipse_height);
-          size.width = std::max(1, ellipse_width);
+          size.height = std::max(1, config.ellipse_height);
+          size.width = std::max(1, config.ellipse_width);
 
           //crop the region of interest with a rectangle
           face_i.x = center.x - size.width;
           face_i.y = center.y - size.height;
           face_i.height = 2*size.height;
           face_i.width = 2*size.width;
-          face = im_th(face_i);
+          face_im = im_th(face_i);
 
           /*//Use a mask to keep the ellipse only
                         Mat im2(face.rows, face.cols, CV_8UC1, Scalar(0,0,0));
@@ -131,11 +122,11 @@ int main(void)
         }
 
         // Gaussian Blur filter
-        cv::GaussianBlur(face, im1 ,Size(2*k+1,2*k+1),0,0);//Sigma is computed frome kernel size. Kernel allow a finer tuning
+        cv::GaussianBlur(face_im, im1 ,Size(2*config.k+1,2*config.k+1),0,0);//Sigma is computed frome kernel size. Kernel allow a finer tuning
         //imshow("Blur", im1);
 
         // Canny filter
-        cv::Canny(im1, im1, lower, upper);
+        cv::Canny(im1, im1, config.lower, config.upper);
         //imshow("Canny", im1);
 
         // find and translate the contours
@@ -242,7 +233,7 @@ int main(void)
 
     //Genetic algorithm - find the best ordering solution
     Chain best(nodes);
-    ok_galg::SolveMultiThread(best, 50, 2, false);
+    SolveMultiThread(best, 50, 2, false);
 
     //Random solution
     Chain random;
@@ -252,7 +243,7 @@ int main(void)
     cout << "random: " << random.cost << " vs GA: " << best.cost << "( 1/" << int((random.cost+0.1)/best.cost) << ")" << endl;
 
     //Generate the command file for the Dextar robot
-    GenerateFile(chains, best, im1.rows, im1.cols, count, pixel);
+    GenerateFile(chains, best, im1.rows, im1.cols, count, config.pixel);
 
     //Add some comments on the image
     ostringstream ossFile;
@@ -273,7 +264,7 @@ int main(void)
   // end normal mode
 
   //ProgMode
-  if (mode == -1)
+  if (config.mode == -1)
   {
     //Load an image
     ostringstream oss;
@@ -293,7 +284,7 @@ int main(void)
     vector<vector<Point>> chains = contours;
 
     // draw chains iteratively
-    if (draw == -1){
+    if (config.draw == -1){
       for(unsigned int i=0;i<chains.size();++i)
       {
         // draw all this contour
@@ -342,7 +333,7 @@ int main(void)
 
     //GA - best solution
     Chain best(nodes);
-    ok_galg::SolveMultiThread(best, 50, 2, false);
+    SolveMultiThread(best, 50, 2, false);
 
     //Random solution
     Chain random;
@@ -352,7 +343,7 @@ int main(void)
     cout << "random: " << random.cost << " vs GA: " << best.cost << "( 1/" << int((random.cost+0.1)/best.cost) << ")" << endl;
 
     //Display the DrawChain - possibility to record
-    if (vidRec == -1)
+    if (config.vidRec == -1)
     {
       ostringstream vidoss;
       vidoss << "../video/drawFace" << count << ".avi";
@@ -362,7 +353,7 @@ int main(void)
     }
 
     //Generate the command file for the Dextar robot
-    GenerateFile(chains, best, im1.rows, im1.cols, count, pixel);
+    GenerateFile(chains, best, im1.rows, im1.cols, count, config.pixel);
 
     //Add some comments
     putText(im1, "Script generated at ../dextarFile/drawFace0.mp", cvPoint(30,im1.rows-30),FONT_HERSHEY_COMPLEX_SMALL, 0.33, cvScalar(200,200,250), 1, CV_AA);

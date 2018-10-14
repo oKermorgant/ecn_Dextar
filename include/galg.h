@@ -6,27 +6,25 @@
 #include <functional>
 #include <chrono>
 #include <algorithm>
-#include <indiv.h>
-
-namespace ok_galg
-{
+#include <chain.h>
+#include <iostream>
 
 // perform a single run with a random population
 template<class T> T SolveSingleRun(T &best, const unsigned int &_t=0, const unsigned int &_run=0)
 {
     // read config parameters
-    int keep_best = 5;
-    int iter_max = 100;
-    int iter_out = 30;
-    int full_population = 500;
+    const unsigned int keep_best = 5;
+    const unsigned int iter_max = 100;
+    const unsigned int iter_out = 30;
+    const unsigned int full_population = 500;
 
-    const int half_population = full_population/2;
+    const unsigned int half_population = full_population/2;
 
     // init first population from random individuals
     std::vector<T> population(full_population + half_population);
 
     std::nth_element(population.begin(), population.begin()+keep_best, population.begin()+full_population);
-    best.Copy(population[0]);
+    best = *(std::min_element(population.begin(), population.begin()+keep_best));
 
     // loop until exit conditions
     unsigned int i, iter=0,iter_follow=0;
@@ -41,7 +39,7 @@ template<class T> T SolveSingleRun(T &best, const unsigned int &_t=0, const unsi
 
         // we keep the best individuals anyway
         for(i=0;i<keep_best;++i)
-            population[full_population+i].Copy(population[i]);
+            population[full_population+i] = population[i];
 
         // selection, 1 vs 1 tournament to fill half of the population
         for(i=keep_best;i<half_population;++i)
@@ -50,15 +48,15 @@ template<class T> T SolveSingleRun(T &best, const unsigned int &_t=0, const unsi
             n2 = rand_int(0,full_population);
             while(n1 == n2)
                 n2 = rand_int(0,full_population);
-            if(population[n1].cost < population[n2].cost)
-                population[full_population+i].Copy(population[n1]);
+            if(population[n1] < population[n2])
+                population[full_population+i] = population[n1];
             else
-                population[full_population+i].Copy(population[n2]);
+                population[full_population+i] = population[n2];
         }
 
         // put new elements at front of new population
         for(i=0;i<half_population;++i)
-            population[i].Copy(population[full_population+i]);
+            population[i] = population[full_population+i];
 
         // crossing and mutation to fill other half of the new pop
         for(i=half_population;i<full_population;++i)
@@ -82,7 +80,7 @@ template<class T> T SolveSingleRun(T &best, const unsigned int &_t=0, const unsi
             // reset counter
             iter_follow = 0;
             // update best
-            best.Copy(population[0]);
+            best = population[0];
         }
         else
             iter_follow += 1;   // always the same winner
@@ -99,7 +97,6 @@ template<class T> void SolveMultiRun(T &best, const unsigned int &_thread_n = 0,
 {
     T indiv;
     bool first = true;
-    unsigned int run;
     std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(100*_thread_n));
 
     unsigned int base_run = (_thread_n-1) * _runs;
@@ -113,7 +110,7 @@ template<class T> void SolveMultiRun(T &best, const unsigned int &_thread_n = 0,
             SolveSingleRun(indiv);
         if(first || indiv.cost < best.cost)
         {
-            best.Copy(indiv);
+            best = indiv;
             first = false;
         }
     }
@@ -139,14 +136,11 @@ template<class T> T SolveMultiThread(T &best, const unsigned int &_runs = 10, un
         t[i].join();
 
     // compare results and return best individual
-    best.Copy(bests[0]);
+    best = bests[0];
     for(auto &other: bests)
         if(other.cost < best.cost)
-            best.Copy(other);
+            best = other;
     return best;
-}
-
-
 }
 
 #endif // GALG_H

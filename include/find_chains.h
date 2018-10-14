@@ -5,6 +5,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/video.hpp>
 #include <opencv2/highgui.hpp>
+#include <chain.h>
 
 using namespace std;
 using namespace cv;
