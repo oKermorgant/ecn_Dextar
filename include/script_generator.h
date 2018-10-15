@@ -23,6 +23,7 @@ private:
   uint cnt = 0;
   int rows, cols;
   std::string filename;
+  float scale;
 
 public:
   ScriptGenerator(const Config & config): dec(config.pixel?100:1)
@@ -40,8 +41,6 @@ public:
 
   void saveImage(const cv::Mat & im)
   {
-    rows = im.rows;
-    cols = im.cols;
     std::ostringstream oss;
     oss << "../img/contourFace" << cnt << ".pgm";
     filename = oss.str();
@@ -49,7 +48,27 @@ public:
     std::cout << "Image has been saved in " << filename << "." << std::endl;
   }
 
-  std::string GenerateFile(const vector<vector<Point> > &_contours, ChainSequence &_chain, int auto_pic = -1)
+  void computeScaling(const vector<vector<Point> > &contours)
+  {
+    // find min size box of sketch
+    auto p(contours[0][0]);
+    int xm(p.x), xM(p.x), ym(p.y), yM(p.y);
+    for(const auto & contour: contours)
+    {
+      for(const auto &p: contour)
+      {
+        xm = std::min(xm, p.x);
+        ym = std::min(ym, p.y);
+        xM = std::max(xM, p.x);
+        yM = std::max(yM, p.y);
+      }
+    }
+    const float s1 = (xM-xm)/74.;
+    const float s2 = (yM-ym)/104.;
+    scale = std::max(s1, s2);
+  }
+
+  std::string GenerateFile(const vector<vector<Point> > &contours, const ChainSequence &_chain, int auto_pic = -1)
   {
       ostringstream oss;
       oss << "../dextarFile/drawFace" << ((auto_pic == -1)?cnt:auto_pic) << ".mp";
@@ -58,14 +77,12 @@ public:
     ofstream file(filename, ios::out | ios::trunc);  // ouverture en écriture avec effacement du fichier ouvert
     cnt++;
 
-    float scale; // scale factor
-    float s1 = (float)cols/74;
-    float s2 = (float)rows/104;
-    if (s1 > s2) scale = s1;
-    else scale = s2;
+
 
     if(file)
     {
+      computeScaling(contours);
+
       cout << "Generation of the dextarFile, please wait..." << endl;
 
       file << std::fixed << std::setprecision(2);
@@ -89,23 +106,23 @@ public:
       for(unsigned int i=0;i<_chain.ordering_.size();++i)
       {
         // move to the first point to draw
-        if(_chain.dir_[i])      p = _contours[_chain.ordering_[i]].back();
-        else                    p = _contours[_chain.ordering_[i]].front();
-        file << "MoveC X" << roundf((float)p.x/scale*dec)/dec << " Y" << -roundf((float)p.y/scale*dec)/dec << " M1 S100;" << endl << endl;
+        if(_chain.dir_[i])      p = contours[_chain.ordering_[i]].back();
+        else                    p = contours[_chain.ordering_[i]].front();
+        file << "MoveC X" << roundf(p.x/scale*dec)/dec << " Y" << -roundf(p.y/scale*dec)/dec << " M1 S100;" << endl << endl;
 
         // pen down
         file << "MoveZ Z0.0; ! Pen down" << endl;
 
-        for(unsigned int j=0;j<_contours[_chain.ordering_[i]].size();++j)
+        for(unsigned int j=0;j<contours[_chain.ordering_[i]].size();++j)
         {
           if(_chain.dir_[i])
           {
-            file << "MoveC X" << roundf((float)_contours[_chain.ordering_[i]][_contours[_chain.ordering_[i]].size()-j-1].x/scale*dec)/dec
-                << " Y" << -roundf((float)_contours[_chain.ordering_[i]][_contours[_chain.ordering_[i]].size()-j-1].y/scale*dec)/dec << " M1 S100;" << endl;
+            file << "MoveC X" << roundf(contours[_chain.ordering_[i]][contours[_chain.ordering_[i]].size()-j-1].x/scale*dec)/dec
+                << " Y" << -roundf(contours[_chain.ordering_[i]][contours[_chain.ordering_[i]].size()-j-1].y/scale*dec)/dec << " M1 S100;" << endl;
 
           } else {
-            file << "MoveC X" << roundf((float)_contours[_chain.ordering_[i]][j].x/scale*dec)/dec
-                << " Y" << -roundf((float)_contours[_chain.ordering_[i]][j].y/scale*dec)/dec << " M1 S100;" << endl;
+            file << "MoveC X" << roundf(contours[_chain.ordering_[i]][j].x/scale*dec)/dec
+                << " Y" << -roundf(contours[_chain.ordering_[i]][j].y/scale*dec)/dec << " M1 S100;" << endl;
           }
         }
         // pen up

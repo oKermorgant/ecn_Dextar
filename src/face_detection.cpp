@@ -1,6 +1,7 @@
 #include <face_detection.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/features2d/features2d.hpp>
+#include <find_chains.h>
 
 using std::vector;
 
@@ -159,9 +160,22 @@ std::vector<Contour> FaceDetector::findContours()
   cv::findContours(im_face, contours, hierarchy, cv::RETR_LIST, cv::CHAIN_APPROX_NONE);
   filter(contours);
 
+  // change contour to list of chains
+  RefineContours(contours);
+
+  auto contours_display = contours;
+  for(auto &contour: contours_display)
+  {
+    contour.reserve(contour.size()*2);
+    contour.insert(contour.end(), contour.rbegin(), contour.rend());
+  }
+
+  im_face.zeros(im_face.rows, im_face.cols, CV_8UC1);
+  cv::drawContours(im_face, contours_display, -1, 255, 1);
+
   // offset for display
-  auto contours_offset = contours;
-  for(auto &contour: contours_offset)
+
+  for(auto &contour: contours_display)
   {
     for(auto &p: contour)
     {
@@ -170,7 +184,7 @@ std::vector<Contour> FaceDetector::findContours()
     }
   }
   //Draw the contours in the original image
-  cv::drawContours(im_raw, contours_offset, -1, cv::Scalar(0,255,0), 1);
+  cv::drawContours(im_raw, contours_display, -1, cv::Scalar(0,255,0), 1);
   return contours;
 }
 

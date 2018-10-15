@@ -10,10 +10,10 @@
 
 #include <chain_sequence.h>
 #include <ga.h>
-#include <find_chains.h>
 #include <parser.h>
 #include <script_generator.h>
 #include <face_detection.h>
+#include <find_chains.h>
 
 using namespace std;
 using namespace cv;
@@ -59,19 +59,15 @@ int main(void)
 
       generator.saveImage(detector.faceImage());
 
-      // change contour to list of chains
-      RefineContours(contours);
-      vector<Contour> chains = contours; //Simple renaming to avoid confusion
-
       // build nodes = distance from one chain ending to the next one
-      best.reset(chains);
+      best.reset(contours);
 
       detector.display("Genetic Algorithm is working, please wait...");
 
       //Genetic algorithm - find the best ordering solution
       SolveMultiThread(best, 50, 2, false);
 
-      std::string filename = generator.GenerateFile(chains, best);
+      std::string filename = generator.GenerateFile(contours, best);
 
       detector.display("Script has been saved in " + filename + "\nPress Esc to exit or any other key to continue...");
 
