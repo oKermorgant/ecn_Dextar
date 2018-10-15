@@ -58,7 +58,8 @@ struct Config
   {
     Parser dextar_config(filename);
     dextar_config.read("webcamParam", vid);
-    dextar_config.read("progMode", mode);
+    dextar_config.read("autoLoad", auto_pic);
+    normal_mode = (auto_pic == -1);
     dextar_config.read("drawChains", draw);
     dextar_config.read("videoRecord", vidRec);
     dextar_config.read("pixelated", pixel);
@@ -67,8 +68,10 @@ struct Config
     dextar_config.read("blur", k);
     dextar_config.read("lower", lower);
     dextar_config.read("upper", upper);
+
   }
-  int vid, mode, draw, vidRec, pixel, ellipse_height, ellipse_width, k;
+  bool normal_mode;
+  int vid, auto_pic, draw, vidRec, pixel, ellipse_height, ellipse_width, k;
   int lower, upper;
 };
 

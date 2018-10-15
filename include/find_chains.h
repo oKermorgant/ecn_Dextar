@@ -5,19 +5,12 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/video.hpp>
 #include <opencv2/highgui.hpp>
-#include <chain.h>
+#include <chain_sequence.h>
 
 using namespace std;
 using namespace cv;
 
-
-double PointDist(const Point &p1, const Point &p2)
-{
-    return ((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y));
-}
-
-
-void DrawChain(const vector<vector<Point> > &_contours, Chain &_chain, cv::Mat _im, string window, int wait = 1, const string filename = "")
+void DrawChain(const vector<vector<Point> > &_contours, ChainSequence &_seq, cv::Mat _im, string window, int wait = 1, const string filename = "")
 {
     cv::Mat imdraw;_im.copyTo(imdraw);
 
@@ -27,15 +20,15 @@ void DrawChain(const vector<vector<Point> > &_contours, Chain &_chain, cv::Mat _
     // draw points
     Point p1,p2;
     double cost = 0;
-    for(unsigned int i=0;i<_chain.ordering_.size();++i)
+    for(unsigned int i=0;i<_seq.ordering_.size();++i)
     {
         // line to the previous one
         if(i != 0)
         {
-            if(_chain.dir_[i-1])    p1 = _contours[_chain.ordering_[i-1]].front();
-            else                    p1 = _contours[_chain.ordering_[i-1]].back();
-            if(_chain.dir_[i])      p2 = _contours[_chain.ordering_[i]].back();
-            else                    p2 = _contours[_chain.ordering_[i]].front();
+            if(_seq.dir_[i-1])    p1 = _contours[_seq.ordering_[i-1]].front();
+            else                    p1 = _contours[_seq.ordering_[i-1]].back();
+            if(_seq.dir_[i])      p2 = _contours[_seq.ordering_[i]].back();
+            else                    p2 = _contours[_seq.ordering_[i]].front();
             cv::line(imdraw, p1,p2, Scalar(0,0,255),2);
             imshow(window, imdraw);
             if(filename != "")
@@ -44,12 +37,12 @@ void DrawChain(const vector<vector<Point> > &_contours, Chain &_chain, cv::Mat _
         }
 
 
-        for(unsigned int j=0;j<_contours[_chain.ordering_[i]].size();++j)
+        for(unsigned int j=0;j<_contours[_seq.ordering_[i]].size();++j)
         {
-            if(_chain.dir_[i])
-                cv::circle(imdraw, _contours[_chain.ordering_[i]][_contours[_chain.ordering_[i]].size()-j-1], 1,Scalar(0,255,0));
+            if(_seq.dir_[i])
+                cv::circle(imdraw, _contours[_seq.ordering_[i]][_contours[_seq.ordering_[i]].size()-j-1], 1,Scalar(0,255,0));
             else
-                cv::circle(imdraw, _contours[_chain.ordering_[i]][j], 1,Scalar(0,255,0));
+                cv::circle(imdraw, _contours[_seq.ordering_[i]][j], 1,Scalar(0,255,0));
             imshow(window, imdraw);
             if(filename != "")
                 writer << imdraw;
@@ -125,7 +118,7 @@ unsigned int FindChains(vector<Point> &_contour, vector<Point> _seeds, vector<ve
                     new_chains+= FindChains(_contour, neighboor, _chains);
                     if(new_chains == 1) // only one new chain from several neighboors, it was actually the same chain
                     {
-                        cout << "Found continuing chain" << endl;
+                        std::cout << "Found continuing chain" << std::endl;
                         // append
                         for(int i=0;i<_chains.back().size();++i)
                             chain.push_back(_chains.back()[i]);
@@ -139,7 +132,7 @@ unsigned int FindChains(vector<Point> &_contour, vector<Point> _seeds, vector<ve
         if(chain.size() > min_length)
             _chains.push_back(chain);
     }
-    //  cout << "Found " << _chains.size() - length << " new chains from " << _seeds.size() << " seeds" << endl;
+    //  cout << "Found " << _chains.size() - length << " new chains from " << _seeds.size() << " seeds" << std::endl;
     return _chains.size() - length;
 }
 
@@ -152,22 +145,22 @@ void RefineContours(vector<vector<Point> > &_contours)
     Point cog, p1;
 
     // find and append chains corresponding to each of the initial contours
-    for(unsigned int i=0;i<_contours.size();++i)
+    for(auto & contour: _contours)
     {
         // compute COG
         x = y = 0;
-        for(auto &point: _contours[i])
+        for(auto &point: contour)
         {
             x += point.x;
             y += point.y;
         }
-        cog.x = int(x/_contours[i].size());
-        cog.y = int(y/_contours[i].size());
+        cog.x = int(x/contour.size());
+        cog.y = int(y/contour.size());
 
         // get farest from COG
-        d = PointDist(cog, _contours[i][0]);
-        p1 = _contours[i][0];
-        for(auto &point: _contours[i])
+        p1 = contour[0];
+        d = PointDist(cog, p1);
+        for(auto &point: contour)
         {
             if(PointDist(cog, point) > d)
             {
@@ -178,18 +171,17 @@ void RefineContours(vector<vector<Point> > &_contours)
 
         // find chains starting from p1 as only seed
         vector<Point> seeds(1);seeds[0] = p1;
-        FindChains(_contours[i], seeds, chains);
+        FindChains(contour, seeds, chains);
     }
 
-    cout << "Found " << chains.size() << " raw chains" << endl;
+    std::cout << "Found " << chains.size() << " raw chains" << std::endl;
 
     // try to regroup chains that have a isolated near start / end position
     bool stitch = true;
     vector<Point> start,end;
     vector<int> neighboors(4,0), neighboor_idx(4,0);
-    const int max_dist = 100;   // actually square of distance
+    const int max_dist = 75;   // actually square of distance
     int stitch_count = 0;
-
 
     while(stitch)
     {
@@ -270,7 +262,7 @@ void RefineContours(vector<vector<Point> > &_contours)
         }
     }
 
-    cout << "Could stitch " << stitch_count << " chains -> " << chains.size() << " final chains" <<  endl;
+    std::cout << "Could stitch " << stitch_count << " chains -> " << chains.size() << " final chains" <<  std::endl;
 
     // erase given contours with found chains
     _contours = chains;

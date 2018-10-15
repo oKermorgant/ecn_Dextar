@@ -6,11 +6,11 @@
 #include <functional>
 #include <chrono>
 #include <algorithm>
-#include <chain.h>
+#include <chain_sequence.h>
 #include <iostream>
 
 // perform a single run with a random population
-template<class T> T SolveSingleRun(T &best, const unsigned int &_t=0, const unsigned int &_run=0)
+ChainSequence SolveSingleRun(ChainSequence &best, const unsigned int &_t=0, const unsigned int &_run=0)
 {
     // read config parameters
     const unsigned int keep_best = 5;
@@ -21,7 +21,9 @@ template<class T> T SolveSingleRun(T &best, const unsigned int &_t=0, const unsi
     const unsigned int half_population = full_population/2;
 
     // init first population from random individuals
-    std::vector<T> population(full_population + half_population);
+    std::vector<ChainSequence> population(full_population + half_population);
+    for(int i = 0; i < full_population; ++i)
+      population[i].Randomize();
 
     std::nth_element(population.begin(), population.begin()+keep_best, population.begin()+full_population);
     best = *(std::min_element(population.begin(), population.begin()+keep_best));
@@ -74,13 +76,13 @@ template<class T> T SolveSingleRun(T &best, const unsigned int &_t=0, const unsi
         std::nth_element(population.begin(), population.begin()+keep_best, population.begin()+full_population);
 
         // check for best individual
-        if(population[0] < best)
+        if(*std::min_element(population.begin(), population.end()) < best)
         {
             // found new best individual
             // reset counter
             iter_follow = 0;
             // update best
-            best = population[0];
+            best = *std::min_element(population.begin(), population.end());
         }
         else
             iter_follow += 1;   // always the same winner
@@ -88,14 +90,11 @@ template<class T> T SolveSingleRun(T &best, const unsigned int &_t=0, const unsi
     return best;
 }
 
-
-
-
 // perform a given number of runs and returns the best one in _best
 // not to be used directly
-template<class T> void SolveMultiRun(T &best, const unsigned int &_thread_n = 0, const unsigned int &_runs = 0, bool display = false)
+void SolveMultiRun(ChainSequence &best, const unsigned int &_thread_n = 0, const unsigned int &_runs = 0, bool display = false)
 {
-    T indiv;
+    ChainSequence indiv;
     bool first = true;
     std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(100*_thread_n));
 
@@ -119,18 +118,18 @@ template<class T> void SolveMultiRun(T &best, const unsigned int &_thread_n = 0,
 
 
 // performs a given number of runs across a given number fo threads, returns the overall best result
-template<class T> T SolveMultiThread(T &best, const unsigned int &_runs = 10, unsigned int _n_threads = 1, bool display = false)
+ChainSequence SolveMultiThread(ChainSequence &best, const unsigned int &_runs = 10, unsigned int _n_threads = 1, bool display = false)
 {
     if(_n_threads > _runs)
         _n_threads = _runs;
     std::vector<std::thread> t;
-    std::vector<T> bests(_n_threads);
+    std::vector<ChainSequence> bests(_n_threads);
 
     unsigned int div = _runs / _n_threads;
     std::cout << "runs per thread: " << div << std::endl;
 
     for(unsigned int i=0;i<_n_threads;++i)
-            t.push_back(std::thread(SolveMultiRun<T>, std::ref(bests[i]), i+1, div, display));
+            t.push_back(std::thread(SolveMultiRun, std::ref(bests[i]), i+1, div, display));
 
     for(unsigned int i=0;i<_n_threads;++i)
         t[i].join();
